@@ -1,26 +1,30 @@
 import React from 'react'
 import axios from 'axios';
 import {api} from '../../../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+var token = null;
 //helper function to get complete header, will return with Bearer token if authorization is true
-const getHeader = (authorized = true) => {
+const getHeader = async(authorized = true) => {
   let header = {
     Accept: 'application/json',
     'Content-Type': 'application/json'
   }
-  // let token = localStorage.getItem('Token')
-  // if (authorized) {
-  //   header.Authorization = 'Bearer ' + token
-  //   SetCookie("domainAccessToken", token)
-  // }
+  if (authorized) {
+    if(!token){
+      token = await AsyncStorage.getItem('token')
+    }
+    header.Authorization = 'Bearer ' + token
+  }
   return header;
 }
 
 const request = async (verb, endpoint, getParams, body, authorized = true) => {
+  let headers = await getHeader(authorized);
   let request = {
     url: api.endpoint + endpoint,
     method: verb,
-    headers: getHeader(authorized)
+    headers: headers
   }
   if (getParams) {
     request.params = getParams;

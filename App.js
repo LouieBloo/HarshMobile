@@ -29,39 +29,32 @@ import {
 import { Provider } from 'react-redux';
 import { store } from './src/redux/store';
 import Login from './src/components/pages/login';
+import ProfileSettings from './src/components/pages/profile-settings';
+import Toast from 'react-native-toast-message';
+import { Provider as PaperProvider } from 'react-native-paper';
 
 const Stack = createStackNavigator();
 
 const App: () => React$Node = () => {
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{ title: 'Welcome' }}
-          />
-          <Stack.Screen name="Profile" component={ProfileScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <PaperProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ title: 'Welcome', headerShown: false }}
+            />
+            <Stack.Screen name="Profile Settings" component={ProfileSettings} />
+          </Stack.Navigator>
+        </NavigationContainer>
+        <Toast ref={(ref) => Toast.setRef(ref)} />
+      </PaperProvider>
     </Provider>
   );
 };
 
-const HomeScreen = ({ navigation }) => {
-  return (
-    <Button
-      title="Go to Jane's profile"
-      onPress={() =>
-        navigation.navigate('Profile', { name: 'Jane' })
-      }
-    />
-  );
-};
-const ProfileScreen = ({ navigation, route }) => {
-  return <Text>This is {route.params.name}'s profile</Text>;
-};
 
 const styles = StyleSheet.create({
   scrollView: {
